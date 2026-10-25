@@ -1,8 +1,15 @@
 # Ordered XNU patches shared by every SDM710 port, one path per line.
 #
+# Both patches are carried for context parity with the series UniXNU applies, not for their
+# board functionality. Upstream keeps them next to its SM8550 patches instead of in the ARM64
+# or OS series, and those series assume they are present.
+#
 # native-smp-secondary: the BCM2837 (4 KiB) personality starts at MAX_CPUS = 4 and numbers its
 # cores in Affinity0; SDM710 has eight cores numbered in Affinity1 (0x000..0x700). Without this
 # patch the kernel caps at four CPUs and computes the wrong CPU number on secondary start.
-# Upstream keeps the patch next to the SM8550 patches instead of in the ARM64 series; carry it
-# here until the ARM64 series owns it, then delete the copy.
 native-smp-secondary.patch
+
+# sheng-platform-power: adds the XNU_SHENG_PMGR call block to bsd_init.c. The OS series patch
+# zzz-boot-progress.patch was exported against that context and does not apply without it.
+# CONFIG_XNU_SHENG_PMGR is off in this port, so the block compiles to nothing.
+sheng-platform-power.patch
