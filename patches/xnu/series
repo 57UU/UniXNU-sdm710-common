@@ -1,0 +1,2 @@
+# Ordered XNU patches shared by every SDM710 port, one path per line.
+# An empty series is valid; board patches belong in the device repository.

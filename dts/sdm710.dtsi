@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: BSD-2-Clause-Patent
+/*
+ * Shared Qualcomm SDM710 (Snapdragon 710) hardware description for UniXNU ports.
+ *
+ * The board DTS includes this file and fills in what is board specific: the memory node (the
+ * usable DRAM range), the CPU children of /cpus (the enabled cores and their affinities) and
+ * any peripheral it exports to /arm-io.
+ *
+ * Values below are the ones the reference board (Xiaomi Mi 8 SE) reports and that the kernel
+ * relies on:
+ *   - GIC-500 (GICv3): distributor 0x17a00000/0x10000, redistributor 0x17a60000/0x100000,
+ *     redistributor stride 0x20000 (eight GICv3 redistributors, two 64 KiB frames each, no
+ *     GICv4 VLPI frames)
+ *   - architectural counter (timebase) 19200000 Hz, the Qualcomm XO
+ *   - PSCI through SMC for the secondary cores
+ *
+ * The arm-io window is derived by UniXNU from the addresses of the nodes carrying
+ * "unixnu,adt-name": the minimum address aligned down to 16 MiB (here 0x17000000) through the
+ * top of the last range, and XNU reads its base as the SoC base.
+ */
+
+/ {
+	cpus: cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		timebase-frequency = <19200000>;
+	};
+
+	psci: psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+	};
+
+	gic: interrupt-controller@17a00000 {
+		unixnu,adt-name = "intc";
+		compatible = "arm,gic-v3";
+		reg = <0x0 0x17a00000 0x0 0x10000>,	/* GICD */
+		      <0x0 0x17a60000 0x0 0x100000>;	/* GICR */
+		redistributor-stride = <0x20000>;
+		interrupt-controller;
+		#interrupt-cells = <3>;
+	};
+};

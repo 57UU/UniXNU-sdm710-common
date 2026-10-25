@@ -1,0 +1,13 @@
+schema_version = 2
+
+[soc]
+name = "sdm710"
+description = "Qualcomm Snapdragon 710 (SDM710): 2x Cortex-A75 + 6x Cortex-A55 (Kryo 360), GIC-500 (GICv3), Adreno 616"
+# Hardware data comes from the mainline sdm670/sdm710 description (SDM710 is a superset of
+# SDM670) and from measurements on the reference board (Xiaomi Mi 8 SE). Pin a revision once
+# the shared description has been reviewed against a specific tree.
+source_repository = "https://github.com/torvalds/linux"
+source_note = "arch/arm64/boot/dts/qcom/sdm670.dtsi (SDM710 = SDM670 + higher clocks)"
+
+[components]
+include = ["ArmCpu", "ArmDTPlatform"]
